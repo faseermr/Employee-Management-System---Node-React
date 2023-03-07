@@ -62,6 +62,22 @@ module.exports = {
     });
   },
 
+  // to get  employee by employee id
+  getEmployeeById: (emp_id) => {
+    return new Promise((resolve, reject) => {
+      dbConn.query(
+        `SELECT * FROM employees inner join employee_types on employees.emp_type = employee_types.emp_type_id where employees.emp_id =?`,
+        [emp_id],
+        (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result);
+        }
+      );
+    });
+  },
+
   // to get all employees by employee type
   getAllEmployeesByEmployeeType: (emp_type) => {
     return new Promise((resolve, reject) => {

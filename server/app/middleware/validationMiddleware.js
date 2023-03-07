@@ -1,3 +1,4 @@
+// to validate input
 const validation = (schema) => async (req, res, next) => {
   const body = req.body;
 
@@ -5,7 +6,7 @@ const validation = (schema) => async (req, res, next) => {
     await schema.validate(body);
     next();
   } catch (e) {
-    res.status(400).json({ error: e.errors.join(", ") });
+    res.status(400).json({ error: e });
   }
 };
 

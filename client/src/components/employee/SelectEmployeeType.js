@@ -15,7 +15,7 @@ const SelectEmployeeType = ({ employee_type, setEmployee_type }) => {
   }, []);
   return (
     <select
-      className="form-select w-25 h-2"
+      className="form-select w-25 "
       onChange={(e) => setEmployee_type(e.target.value)}
     >
       <option value={0}>Employee Types</option>

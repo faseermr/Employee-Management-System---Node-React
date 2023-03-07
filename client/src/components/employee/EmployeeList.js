@@ -9,21 +9,20 @@ import SelectEmployeeType from "./SelectEmployeeType";
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [employee_type, setEmployee_type] = useState(0);
-  const [itemPerPage, setItemPerPage] = useState(5);
+  const [itemPerPage, setItemPerPage] = useState(3);
   const [currentPage, setCurrentPage] = useState(1);
   const [indexLastItem, setIndexLastItem] = useState(currentPage * itemPerPage);
   const [indexFirstItem, setIndexFirstItem] = useState(
     indexLastItem - itemPerPage
   );
-  const [pages, setPages] = useState([]);
   const [sorted, setSorted] = useState(false);
   const navigate = useNavigate();
 
+  // to get all employees data
   const getAllEmployeesData = async () => {
     if (employee_type == 0) {
       const res = await employeeServices.getAllEmployees();
       setEmployees(res.data);
-      //console.log(res);
     } else {
       const res = await employeeServices.getAllEmployeesByEmployeeType(
         employee_type
@@ -32,17 +31,7 @@ const EmployeeList = () => {
     }
   };
 
-  // const handleSorting = (sortField, sortOrder) => {
-  //   console.log(sortField, sortOrder)
-  //  };
-  // const sortEmployeesData = () => {
-  //   console.log("sort");
-  //   let sortArr = employees.sort((a, b) =>
-  //     a.display_name.localeCompare(b.display_name)
-  //   );
-  //   console.log(sortArr);
-  //   setEmployees(sortArr);
-  // };
+  // to delete employee data by id
   const deleteEmployee = async (emp_id) => {
     try {
       let option = window.confirm("Are you want to delete");
@@ -53,17 +42,11 @@ const EmployeeList = () => {
       }
     } catch (error) {}
   };
-  useEffect(() => {
-    getAllEmployeesData();
-  }, [employee_type]);
 
   useEffect(() => {
-    for (let i = 1; i <= Math.ceil(employees.length / itemPerPage); i++) {
-      if (!pages.includes(i)) {
-        pages.push(i);
-      }
-    }
-  }, [employees]);
+    getAllEmployeesData();
+    setCurrentPage(1);
+  }, [employee_type]);
 
   useEffect(() => {
     setIndexLastItem(currentPage * itemPerPage);
@@ -83,7 +66,15 @@ const EmployeeList = () => {
       );
     }
     setEmployees(sortedEmployees);
-  }, [sorted]);
+  }, [sorted, employees]);
+
+  // page count for pagination
+  const pages = [];
+  for (let i = 1; i <= Math.ceil(employees.length / itemPerPage); i++) {
+    if (!pages.includes(i)) {
+      pages.push(i);
+    }
+  }
   return (
     <div className="card">
       <div className="card-header p-3 fw-bold">People</div>
@@ -95,61 +86,67 @@ const EmployeeList = () => {
           />
           <AddEmployeeButton />
         </div>
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th>
-                Display Name{" "}
-                <BiSortAlt2
-                  onClick={() => setSorted(!sorted)}
-                  style={{ cursor: "pointer", marginLeft: "10px" }}
-                />
-              </th>
-              <th>Emp ID</th>
-              <th>Designation</th>
-              <th>Emp. Type</th>
-              <th>Experience</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees
-              .slice(indexFirstItem, indexLastItem)
-              .map((employee, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{employee.display_name}</td>
-                    <td>{employee.emp_id}</td>
-                    <td>{employee.designation}</td>
-                    <td>{employee.emp_type_name}</td>
-                    <td>{employee.experience} Years</td>
-                    <td>
-                      <button
-                        className="btn text-danger"
-                        onClick={() =>
-                          navigate(`/update-people/${employee.emp_id}`)
-                        }
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn text-primary"
-                        onClick={() => deleteEmployee(employee.emp_id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+        {employees.length > 0 ? (
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>
+                  Display Name{" "}
+                  <BiSortAlt2
+                    onClick={() => setSorted(!sorted)}
+                    style={{ cursor: "pointer", marginLeft: "10px" }}
+                  />
+                </th>
+                <th>Emp ID</th>
+                <th>Designation</th>
+                <th>Emp. Type</th>
+                <th>Experience</th>
+              </tr>
+            </thead>
+            <tbody>
+              {employees
+                .slice(indexFirstItem, indexLastItem)
+                .map((employee, index) => {
+                  return (
+                    <tr key={index}>
+                      <td>{employee.display_name}</td>
+                      <td>{employee.emp_id}</td>
+                      <td>{employee.designation}</td>
+                      <td>{employee.emp_type_name}</td>
+                      <td>{employee.experience} Years</td>
+                      <td>
+                        <button
+                          className="btn text-primary"
+                          onClick={() =>
+                            navigate(`/update-people/${employee.emp_id}`)
+                          }
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn text-danger"
+                          onClick={() => deleteEmployee(employee.emp_id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        ) : (
+          <h2>No Result</h2>
+        )}
       </div>
       <div className="card-footer d-flex justify-content-center p-2">
-        <Pagination
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          pages={pages}
-        />
+        {employees.length > 0 ? (
+          <Pagination
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            pages={pages}
+          />
+        ) : null}
       </div>
     </div>
   );

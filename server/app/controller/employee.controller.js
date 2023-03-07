@@ -4,6 +4,7 @@ const {
   getAllEmployeesByEmployeeType,
   deleteEmployee,
   updateEmployee,
+  getEmployeeById,
 } = require("../model/employee.model");
 
 module.exports = {
@@ -48,6 +49,16 @@ module.exports = {
   getAllEmployeesByEmployeeType: async (req, res) => {
     try {
       const response = await getAllEmployeesByEmployeeType(req.params.emp_type);
+      res.status(200).json(response);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+
+  // to get employees by employee id
+  getEmployeeById: async (req, res) => {
+    try {
+      const response = await getEmployeeById(req.params.emp_id);
       res.status(200).json(response);
     } catch (error) {
       res.status(500).json(error);

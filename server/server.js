@@ -8,10 +8,6 @@ const dbConn = require("./app/config/db_config");
 app.use(cors());
 app.use(express.json());
 
-app.get("/test", (req, res) => {
-  res.send("Hello World");
-});
-
 const employeeRoutes = require("./app/router/employee.routes");
 const employeeTypeRoutes = require("./app/router/employeeType.routes");
 app.use("/api/employee", employeeRoutes);

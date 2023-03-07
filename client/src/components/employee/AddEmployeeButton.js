@@ -6,7 +6,7 @@ const AddEmployeeButton = () => {
 
   return (
     <button
-      className="btn btn-primary m-2 h-2"
+      className="btn btn-primary m-2"
       onClick={() => navigate(`/add-people`)}
     >
       Add People
