@@ -9,7 +9,7 @@ import SelectEmployeeType from "./SelectEmployeeType";
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [employee_type, setEmployee_type] = useState(0);
-  const [itemPerPage, setItemPerPage] = useState(3);
+  const [itemPerPage, setItemPerPage] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [indexLastItem, setIndexLastItem] = useState(currentPage * itemPerPage);
   const [indexFirstItem, setIndexFirstItem] = useState(

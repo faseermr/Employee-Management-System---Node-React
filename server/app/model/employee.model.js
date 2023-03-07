@@ -51,7 +51,7 @@ module.exports = {
   getAllEmployees: () => {
     return new Promise((resolve, reject) => {
       dbConn.query(
-        `SELECT * FROM employees inner join employee_types on employees.emp_type = employee_types.emp_type_id`,
+        `SELECT * FROM employees inner join employee_types on employees.emp_type = employee_types.emp_type_id ORDER by employees.emp_id`,
         (err, result) => {
           if (err) {
             reject(err);
