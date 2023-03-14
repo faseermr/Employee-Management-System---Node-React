@@ -4,7 +4,7 @@ Follow these steps to run the app on your local machine,
 
 Assume you have node & mysql installed on your local machine.
 
-    1.  First import database 'employees_db.sql' from root directory.
+    1.  First create database called 'employment_management_system' and import 'employees_db.sql' from root directory.
 
     2.  Run "npm install" from the 'client' directory & Run "npm install" from the 'server' directory.
 
