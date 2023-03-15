@@ -65,8 +65,8 @@ const EmployeeList = () => {
         b.display_name.localeCompare(a.display_name)
       );
     }
-    setEmployees(sortedEmployees);
-  }, [sorted, employees]);
+    setEmployees([...sortedEmployees]);
+  }, [sorted]);
 
   // page count for pagination
   const pages = [];
