@@ -7,7 +7,6 @@ const SelectEmployeeType = ({ employee_type, setEmployee_type }) => {
   const getAllEmployeesTypes = async () => {
     const res = await employeeTypeServices.getAllEmployeesTypes();
     setEmployeeTypes(res.data);
-    // console.log(res.data);
   };
 
   useEffect(() => {

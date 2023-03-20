@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { BiSortAlt2 } from "react-icons/bi";
 import employeeServices from "../../services/employeeServices";
 import AddEmployeeButton from "./AddEmployeeButton";
 import Pagination from "../pagination/Pagination";
 import SelectEmployeeType from "./SelectEmployeeType";
+import usePagination from "../../hooks/usePagination";
+import SortingTable from "../sorting/SortingTable";
+import useSortingTable from "../../hooks/useSortingTable";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
   const [employee_type, setEmployee_type] = useState(0);
-  const [itemPerPage, setItemPerPage] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [indexLastItem, setIndexLastItem] = useState(currentPage * itemPerPage);
-  const [indexFirstItem, setIndexFirstItem] = useState(
-    indexLastItem - itemPerPage
-  );
+  const { currentPage, setCurrentPage, indexFirstItem, indexLastItem, pages } =
+    usePagination(employees);
   const [sorted, setSorted] = useState(false);
+  const [sortedField, setSortedField] = useState(null);
   const navigate = useNavigate();
+  const { sortedEmployees } = useSortingTable(employees, sortedField, sorted);
 
   // to get all employees data
   const getAllEmployeesData = async () => {
@@ -49,32 +49,9 @@ const EmployeeList = () => {
   }, [employee_type]);
 
   useEffect(() => {
-    setIndexLastItem(currentPage * itemPerPage);
-    setIndexFirstItem(indexLastItem - itemPerPage);
-  }, [currentPage, indexLastItem]);
+    setEmployees([...sortedEmployees]);
+  }, [sorted]);
 
-  // sorted function
-  useEffect(() => {
-    let sortedEmployees;
-    if (sorted) {
-      sortedEmployees = employees.sort((a, b) =>
-        a.display_name.localeCompare(b.display_name)
-      );
-    } else {
-      sortedEmployees = employees.sort((a, b) =>
-        b.display_name.localeCompare(a.display_name)
-      );
-    }
-    setEmployees(sortedEmployees);
-  }, [sorted, employees]);
-
-  // page count for pagination
-  const pages = [];
-  for (let i = 1; i <= Math.ceil(employees.length / itemPerPage); i++) {
-    if (!pages.includes(i)) {
-      pages.push(i);
-    }
-  }
   return (
     <div className="card">
       <div className="card-header p-3 fw-bold">People</div>
@@ -92,13 +69,35 @@ const EmployeeList = () => {
               <tr>
                 <th>
                   Display Name{" "}
-                  <BiSortAlt2
+                  {/* <BiSortAlt2
                     onClick={() => setSorted(!sorted)}
                     style={{ cursor: "pointer", marginLeft: "10px" }}
+                  /> */}
+                  <SortingTable
+                    setSorted={setSorted}
+                    sorted={sorted}
+                    setSortedField={setSortedField}
+                    field="display_name"
                   />
                 </th>
-                <th>Emp ID</th>
-                <th>Designation</th>
+                <th>
+                  Emp ID{" "}
+                  <SortingTable
+                    setSorted={setSorted}
+                    sorted={sorted}
+                    setSortedField={setSortedField}
+                    field="emp_id"
+                  />
+                </th>
+                <th>
+                  Designation
+                  <SortingTable
+                    setSorted={setSorted}
+                    sorted={sorted}
+                    setSortedField={setSortedField}
+                    field="designation"
+                  />
+                </th>
                 <th>Emp. Type</th>
                 <th>Experience</th>
               </tr>
